@@ -4,10 +4,10 @@ import pickle
 from PIL import Image
 
 def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    x_train = pickle.load(open('x_train.p', 'rb'), encoding='latin1')
-    y_train = pickle.load(open('y_train.p', 'rb'), encoding='latin1')
-    x_test = pickle.load(open('x_test.p', 'rb'), encoding='latin1')
-    y_test = pickle.load(open('y_test.p', 'rb'), encoding='latin1')
+    x_train = pickle.load(open('./Robotic Learning of Controls from Demonstrations and Images/x_train.p', 'rb'), encoding='latin1')
+    y_train = pickle.load(open('./Robotic Learning of Controls from Demonstrations and Images/y_train.p', 'rb'), encoding='latin1')
+    x_test = pickle.load(open('./Robotic Learning of Controls from Demonstrations and Images/x_test.p', 'rb'), encoding='latin1')
+    y_test = pickle.load(open('./Robotic Learning of Controls from Demonstrations and Images/y_test.p', 'rb'), encoding='latin1')
     return x_train, y_train, x_test, y_test
 
 def visualize_data(images: np.ndarray, controls: np.ndarray) -> None:
@@ -121,6 +121,7 @@ if __name__ == '__main__':
     # 5a: visualize the 0th, 10th, and 20th images in the training
     # set along with their corresponding control labels
     visualize_data(x_train, y_train)
+    print()
     # ---------------
 
     print("5b: Ordinary Least Squares")
@@ -128,11 +129,15 @@ if __name__ == '__main__':
     # what happens when you do this and explain why.
     X_train, Y_train = compute_data_matrix(x_train, y_train)
     X_test, Y_test = compute_data_matrix(x_test, y_test)
-    pi_ols = ordinary_least_squares(X_train, Y_train)
+    try:
+        pi_ols = ordinary_least_squares(X_train, Y_train)
+    except np.linalg.LinAlgError:
+        pi_ols = None
     # Explanation: The matrix is singular and not invertible. There isn't
     # enough data for the high dimensional image space, so many solutions
     # exist. We have 91 images but 2700 parameters, so you can fit an
     # arbitrary set of controls to the training data.
+    print()
     # ---------------
 
     print("5c: Ridge Regression")
@@ -144,7 +149,7 @@ if __name__ == '__main__':
         err_test = measure_error(X_test, Y_test, pi_ridge)
         print("Lambda: ", v)
         print("Test Error: ", err_test)
-        print()
+    print()
     # ---------------
 
     print("5d: Standardized Data")
@@ -156,7 +161,7 @@ if __name__ == '__main__':
         err_test = measure_error(X_test, Y_test, pi_ridge)
         print("Standardized - Lambda: ", v)
         print("Test Error: ", err_test)
-        print()
+    print()
     # ---------------
 
     print("5e: Evaluate Policies with and without standarization")
