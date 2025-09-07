@@ -134,7 +134,6 @@ class FullyConnected(Layer):
             self._init_parameters(X.shape)
 
         ### BEGIN YOUR CODE ###
-        
         # perform an affine transformation and activation
         out = X @ self.parameters["W"] + self.parameters["b"]
         out = self.activation.forward(out)

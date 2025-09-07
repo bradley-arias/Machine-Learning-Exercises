@@ -158,11 +158,10 @@ class ReLU(Activation):
         f(z) as described above applied elementwise to `Z`
         """
 
-        # Your code here!'
-        # ---------------
-
+        ### BEGIN YOUR CODE ###
         # 1. implement the forward pass for relu
         return np.maximum(0, Z)
+        ### END YOUR CODE ###
 
     def backward(self, Z: np.ndarray, dY: np.ndarray) -> np.ndarray:
         """Backward pass for relu activation.
@@ -177,14 +176,13 @@ class ReLU(Activation):
         -------
         gradient of loss w.r.t. input of this layer
         """
-        # Your code here!
-        # ---------------
-
-        # implement the backward pass for relu
+        ### BEGIN YOUR CODE ###
+        # 1. implement the backward pass for relu
         temp = np.copy(Z)
         temp[temp >= 0] = 1
         temp[temp < 0] = 0
         return dY*temp
+        ### END YOUR CODE ###
 
 
 class SoftMax(Activation):
@@ -203,8 +201,12 @@ class SoftMax(Activation):
         -------
         f(z) as described above applied elementwise to `Z`
         """
-        # Your code here!
-        W = self.parameters["W"]
+        ### BEGIN YOUR CODE ###
+        # 2. implement forward pass for softmax (numerically stable)
+        si = Z - np.max(Z, axis=1, keepdims=True) # subtract max for numerical stability
+        sl = np.sum(si, axis=1, keepdims=True)
+        return np.exp(si) / sl
+        ### END YOUR CODE ###
 
     def backward(self, Z: np.ndarray, dY: np.ndarray) -> np.ndarray:
         """Backward pass for softmax activation.
@@ -220,8 +222,16 @@ class SoftMax(Activation):
         gradient of loss w.r.t. input of this layer
         """
         ### YOUR CODE HERE ###
-        return ...
-
+        # 2. implement the backward pass for softmax
+        p = self.forward(Z)
+        dLdZ = np.zeros(Z.shape[0])
+        for i,v in enumerate(p):
+            diag = np.diagflat(v)
+            val = v.reshape(-1,1)
+            J = diag - val @ val.T
+            dLdZ[i] = dY[i] @ J
+        return dLdZ
+        ### END YOUR CODE ###
 
 class ArcTan(Activation):
     def __init__(self):
