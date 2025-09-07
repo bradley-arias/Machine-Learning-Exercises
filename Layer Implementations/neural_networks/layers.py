@@ -107,15 +107,13 @@ class FullyConnected(Layer):
         self.n_in = X_shape[1]
 
         ### BEGIN YOUR CODE ###
-
-        W = self.init_weights(...)
-        b = ...
+        W = self.init_weights((self.n_in, self.n_out))
+        b = np.zeros((1, self.n_out))
 
         self.parameters = OrderedDict({"W": W, "b": b}) # DO NOT CHANGE THE KEYS
-        self.cache: OrderedDict = ...  # cache for backprop
-        self.gradients: OrderedDict = ...  # parameter gradients initialized to zero
+        self.cache: OrderedDict = OrderedDict({"Z": []})  # cache for backprop
+        self.gradients: OrderedDict = OrderedDict({"W": np.zeros_like(W), "b": np.zeros_like(b)})  # parameter gradients initialized to zero
                                            # MUST HAVE THE SAME KEYS AS `self.parameters`
-
         ### END YOUR CODE ###
 
     def forward(self, X: np.ndarray) -> np.ndarray:
@@ -138,10 +136,11 @@ class FullyConnected(Layer):
         ### BEGIN YOUR CODE ###
         
         # perform an affine transformation and activation
-        out = ...
-        
-        # store information necessary for backprop in `self.cache`
+        out = X @ self.parameters["W"] + self.parameters["b"]
+        out = self.activation.forward(out)
 
+        # store information necessary for backprop in `self.cache`
+        self.cache["Z"] = out
         ### END YOUR CODE ###
 
         return out

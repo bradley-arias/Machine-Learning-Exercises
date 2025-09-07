@@ -157,8 +157,12 @@ class ReLU(Activation):
         -------
         f(z) as described above applied elementwise to `Z`
         """
-        ### YOUR CODE HERE ###
-        return ...
+
+        # Your code here!'
+        # ---------------
+
+        # 1. implement the forward pass for relu
+        return np.maximum(0, Z)
 
     def backward(self, Z: np.ndarray, dY: np.ndarray) -> np.ndarray:
         """Backward pass for relu activation.
@@ -173,8 +177,14 @@ class ReLU(Activation):
         -------
         gradient of loss w.r.t. input of this layer
         """
-        ### YOUR CODE HERE ###
-        return ...
+        # Your code here!
+        # ---------------
+
+        # implement the backward pass for relu
+        temp = np.copy(Z)
+        temp[temp >= 0] = 1
+        temp[temp < 0] = 0
+        return dY*temp
 
 
 class SoftMax(Activation):
@@ -193,8 +203,8 @@ class SoftMax(Activation):
         -------
         f(z) as described above applied elementwise to `Z`
         """
-        ### YOUR CODE HERE ###
-        return ...
+        # Your code here!
+        W = self.parameters["W"]
 
     def backward(self, Z: np.ndarray, dY: np.ndarray) -> np.ndarray:
         """Backward pass for softmax activation.
