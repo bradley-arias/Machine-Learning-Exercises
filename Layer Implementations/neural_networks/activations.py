@@ -202,7 +202,7 @@ class SoftMax(Activation):
         f(z) as described above applied elementwise to `Z`
         """
         ### BEGIN YOUR CODE ###
-        # 2. implement forward pass for softmax (numerically stable)
+        # 3. implement forward pass for softmax (numerically stable)
         si = Z - np.max(Z, axis=1, keepdims=True) # subtract max for numerical stability
         sl = np.sum(si, axis=1, keepdims=True)
         return np.exp(si) / sl
@@ -222,7 +222,7 @@ class SoftMax(Activation):
         gradient of loss w.r.t. input of this layer
         """
         ### YOUR CODE HERE ###
-        # 2. implement the backward pass for softmax
+        # 3. implement the backward pass for softmax
         p = self.forward(Z)
         dLdZ = np.zeros(Z.shape[0])
         for i,v in enumerate(p):

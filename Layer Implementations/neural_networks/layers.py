@@ -107,6 +107,7 @@ class FullyConnected(Layer):
         self.n_in = X_shape[1]
 
         ### BEGIN YOUR CODE ###
+        # 2. initialize the weights and biases
         W = self.init_weights((self.n_in, self.n_out))
         b = np.zeros((1, self.n_out))
 
@@ -134,6 +135,7 @@ class FullyConnected(Layer):
             self._init_parameters(X.shape)
 
         ### BEGIN YOUR CODE ###
+        # 2. implement the foward pass
         # perform an affine transformation and activation
         out = X @ self.parameters["W"] + self.parameters["b"]
         out = self.activation.forward(out)
@@ -162,18 +164,26 @@ class FullyConnected(Layer):
         shape (batch_size, input_dim)
         """
         ### BEGIN YOUR CODE ###
-        
+        # 2. implement the backward pass
+        W = self.parameters["W"]
+
         # unpack the cache
-        
+        Z = self.cache["Z"]
+        X = self.cache["X"]
+
         # compute the gradients of the loss w.r.t. all parameters as well as the
         # input of the layer
 
-        dX = ...
+        dZ = self.activation.backward(Z, dLdY)
+        dW = X.T @ dZ
+        db = np.sum(dZ, axis=0, keepdims=True)
+        dX = dZ @ W.T
 
         # store the gradients in `self.gradients`
         # the gradient for self.parameters["W"] should be stored in
         # self.gradients["W"], etc.
-
+        self.gradients["W"] = dW
+        self.gradients["b"] = db
         ### END YOUR CODE ###
 
         return dX
